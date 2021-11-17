@@ -81,4 +81,19 @@ class UserController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    #[Route('/remove/{id}', name: 'remove')]
+    public function remove($id)
+    {
+        $doctrine = $this->getDoctrine();
+
+        $user = $doctrine->getRepository(User::class)->find($id);
+
+        $manager = $doctrine->getManager();
+        $manager->remove($user);
+        $manager->flush();
+
+        $this->addFlash('success', 'Registro removido com sucesso!');
+        return $this->redirectToRoute('user_index');
+    }
 }
