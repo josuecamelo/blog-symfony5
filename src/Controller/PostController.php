@@ -14,8 +14,12 @@ class PostController extends AbstractController
     #[Route('/', name: 'index')]
     public function index(): Response
     {
+        $posts = $this->getDoctrine()
+            ->getRepository(Post::class)
+            ->findAll();
+
         return $this->render('post/index.html.twig', [
-            'controller_name' => 'PostController',
+            'posts' => $posts
         ]);
     }
 
@@ -37,11 +41,54 @@ class PostController extends AbstractController
         $post->setCreatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
         $post->setUpdatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
 
-        dump($post);
 
         $doctrine = $this->getDoctrine()->getManager();
-
         $doctrine->persist($post);
         $doctrine->flush();
+    }
+
+    #[Route('/edit/{id}', name: 'edit')]
+    public function edit($id)
+    {
+        $post = $this->getDoctrine()
+            ->getRepository(Post::class)
+            ->find($id);
+
+        return $this->render('post/edit.html.twig',[
+            'post' => $post
+        ]);
+    }
+
+    #[Route('/update/{id}', name: 'update')]
+    public function update(Request $request, $id)
+    {
+        $data = $request->request->all();
+        $post = $this->getDoctrine()
+            ->getRepository(Post::class)
+            ->find($id);
+
+        $post->setTitle($data['title']);
+        $post->setDescription($data['description']);
+        $post->setContent($data['content']);
+        $post->setSlug($data['slug']);
+        $post->setUpdatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
+
+        $doctrine = $this->getDoctrine()->getManager();
+        $doctrine->persist($post);
+        $doctrine->flush();
+    }
+
+    #[Route('/delete/{id}', name: 'delete')]
+    public function delete($id)
+    {
+        $post = $this->getDoctrine()
+            ->getRepository(Post::class)
+            ->find($id);
+
+        $manager = $this->getDoctrine()->getManager();
+        $manager->remove($post);
+        $manager->flush();
+
+        return $this->redirectToRoute('post_index');
     }
 }

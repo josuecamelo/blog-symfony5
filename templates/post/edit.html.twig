@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <form action="{{ path('post_update', {'id': post.id}) }}" method="post">
+        <p>
+            <label>Título</label>
+            <input type="text" name="title" value="{{ post.title }}" />
+        </p>
+        <p>
+            <label>Descrição</label>
+            <input type="text" name="description" value="{{ post.description }}"/>
+        </p>
+        <p>
+            <label>Slug</label>
+            <input type="text" name="slug" value="{{ post.slug }}"/>
+        </p>
+        <p>
+            <label>Conteúdo</label>
+            <textarea name="content" cols="30" rows="10">{{ post.content }}</textarea>
+        </p>
+        <p>
+            <button type="submit">Salvar</button>
+        </p>
+    </form>
+{% endblock %}
+
+{% block title %}
+    Edição de Postagem
+{% endblock %}
+

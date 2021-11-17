@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PostController!{% endblock %}
+{% block title %}Posts{% endblock %}
 
 {% block body %}
 <style>
@@ -9,12 +9,15 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
+    <h1>Postagens Recentes - <a href="{{ path('post_create') }}">Criar Post</a></h1>
     <ul>
-        <li>Your controller at <code><a href="{{ 'D:/ProjetoSymfony4/blog/src/Controller/PostController.php'|file_link(0) }}">src/Controller/PostController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'D:/ProjetoSymfony4/blog/templates/post/index.html.twig'|file_link(0) }}">templates/post/index.html.twig</a></code></li>
+        {% for post in posts %}
+            <li>
+                {{ post.id }} - {{ post.title }} - {{ post.createdAt|date('d/m/Y G:i:s') }}
+                <a href="{{ path('post_edit', {'id': post.id}) }}">Editar</a> |
+                <a href="{{ path('post_delete', {'id': post.id}) }}">Apagar</a>
+            </li>
+        {% endfor %}
     </ul>
 </div>
 {% endblock %}
