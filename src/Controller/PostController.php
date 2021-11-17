@@ -45,6 +45,9 @@ class PostController extends AbstractController
         $doctrine = $this->getDoctrine()->getManager();
         $doctrine->persist($post);
         $doctrine->flush();
+
+        $this->addFlash('success', 'Registro inserido com Sucesso');
+        return $this->redirectToRoute('post_index');
     }
 
     #[Route('/edit/{id}', name: 'edit')]
@@ -76,6 +79,9 @@ class PostController extends AbstractController
         $doctrine = $this->getDoctrine()->getManager();
         $doctrine->persist($post);
         $doctrine->flush();
+
+        $this->addFlash('success', 'Registro atualizado com Sucesso');
+        return $this->redirectToRoute('post_index');
     }
 
     #[Route('/delete/{id}', name: 'delete')]
@@ -88,6 +94,8 @@ class PostController extends AbstractController
         $manager = $this->getDoctrine()->getManager();
         $manager->remove($post);
         $manager->flush();
+
+        $this->addFlash('success', 'Registro removido com Sucesso');
 
         return $this->redirectToRoute('post_index');
     }
