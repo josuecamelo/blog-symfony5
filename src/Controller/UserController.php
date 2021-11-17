@@ -72,7 +72,7 @@ class UserController extends AbstractController
 
             $this->addFlash('success', 'Registro Alterado com Sucesso');
 
-            return $this->redirectToRoute('user_edit');
+            return $this->redirectToRoute('user_edit', ['id' => $id]);
         }
 
         //dump($this->getDoctrine()->getRepository(User::class)->findAll());
