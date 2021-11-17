@@ -12,6 +12,18 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/users', name: 'user_')]
 class UserController extends AbstractController
 {
+    #[Route('', name: 'index')]
+    public function index()
+    {
+        $users = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->findAll();
+
+        return $this->render('user/index.html.twig', [
+            'users' => $users
+        ]);
+    }
+
     #[Route('/create', name: 'create')]
     public function create(Request $request): Response
     {
