@@ -35,7 +35,37 @@ class UserController extends AbstractController
 
         //dump($this->getDoctrine()->getRepository(User::class)->findAll());
 
-        return $this->render('user/index.html.twig', [
+        return $this->render('user/create.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/edit/{id}', name: 'edit')]
+    public function edit(Request $request, $id): Response
+    {
+        $user = $this->getDoctrine()
+            ->getRepository(User::class)
+            ->find($id);
+
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted()){
+            $user = $form->getData();
+            $user->setUpdatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
+
+            $manager = $this->getDoctrine()->getManager();
+
+            $manager->flush();
+
+            $this->addFlash('success', 'Registro Alterado com Sucesso');
+
+            return $this->redirectToRoute('user_edit');
+        }
+
+        //dump($this->getDoctrine()->getRepository(User::class)->findAll());
+
+        return $this->render('user/edit.html.twig', [
             'form' => $form->createView()
         ]);
     }
