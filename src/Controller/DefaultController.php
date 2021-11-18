@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DefaultController extends AbstractController
 {
     /**
-     * @Route("/")
+     * @Route("/", name="home")
      */
     public function index(PaginatorInterface $paginator, Request $request){
         $page = $request->query->getInt('page', 1);
