@@ -49,7 +49,7 @@ class Category
      */
     private $postCollection;
 
-    private function __construct()
+    public function __construct()
     {
         $this->postCollection = new ArrayCollection();
     }

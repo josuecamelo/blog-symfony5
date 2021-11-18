@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Form\UserType;
@@ -8,8 +8,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-#[Route('/users', name: 'user_')]
+#[Route('/admin/users', name: 'user_')]
 class UserController extends AbstractController
 {
     #[Route('', name: 'index')]
@@ -25,7 +26,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/create', name: 'create')]
-    public function create(Request $request): Response
+    public function create(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -33,6 +34,12 @@ class UserController extends AbstractController
 
         if($form->isSubmitted()){
             $user = $form->getData();
+
+            $password = $passwordEncoder->encodePassword($user, $user->getPassword());
+            $user->setPassword($password);
+
+            $user->setRoles('ROLE_USER');
+
             $user->setCreatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
             $user->setUpdatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
 
@@ -53,7 +60,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'edit')]
-    public function edit(Request $request, $id): Response
+    public function edit(Request $request, $id, UserPasswordEncoderInterface $passwordEncoder): Response
     {
         $user = $this->getDoctrine()
             ->getRepository(User::class)
@@ -64,6 +71,10 @@ class UserController extends AbstractController
 
         if($form->isSubmitted()){
             $user = $form->getData();
+
+            $password = $passwordEncoder->encodePassword($user, $user->getPassword());
+            $user->setPassword($password);
+
             $user->setUpdatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
 
             $manager = $this->getDoctrine()->getManager();
