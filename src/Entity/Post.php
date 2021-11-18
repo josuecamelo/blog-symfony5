@@ -141,10 +141,6 @@ class Post
      */
     public function setAuthor(User $author): self
     {
-//        if($this->author->contains($author)){
-//            return $this;
-//        }
-
         $this->author = $author;
 
         return $this;

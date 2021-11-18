@@ -16,6 +16,7 @@ class PostType extends AbstractType
             ->add('description')
             ->add('content')
             ->add('slug')
+            ->add('author')
             //->add('created_at')
             //->add('updated_at')
         ;

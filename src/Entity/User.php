@@ -142,4 +142,9 @@ class User
     {
         return $this->posts;
     }
+
+    public function __toString()
+    {
+        return $this->first_name . ' ' . $this->getLastName();
+    }
 }
