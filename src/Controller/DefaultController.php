@@ -2,7 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Category;
+use App\Entity\Post;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 
@@ -11,34 +15,57 @@ class DefaultController extends AbstractController
     /**
      * @Route("/")
      */
-    public function index(){
-        $posts = [
-            [
-                'id' => 1,
-                'title' => 'Post 1',
-                'created_at' => '2021-11-16 22:24:30'
-            ],
-            [
-                'id' => 2,
-                'title' => 'Post 2',
-                'created_at' => '2021-11-16 22:24:30'
-            ],
-        ];
+    public function index(PaginatorInterface $paginator, Request $request){
+        $page = $request->query->getInt('page', 1);
 
-        return $this->render('index.html.twig',[
+        $posts = $this->getDoctrine()->getRepository(Post::class)->findAll();
+
+        $posts = $paginator->paginate($posts, $page, 6);
+
+        return $this->render('index.html.twig', [
             'title' => 'Postagem Teste',
-            'posts' => $posts
+            'posts' => $posts,
+            'categories' => $this->getCategories()
         ]);
     }
 
-    /**
-     * @Route("/post-exemplo/{slug}")
-     */
+    #[Route('/post/{slug}', name: 'single_post')]
     public function single($slug)
     {
 
-        return $this->render('single.html.twig',[
-            'slug' => $slug
-        ]);
+        $post = $this->getDoctrine()->getRepository(Post::class)->findOneBySlug($slug);
+
+        //$form = $this->createForm(CommentType::class, new Comment());
+        return $this->render('single.html.twig',
+            [
+                'post' => $post,
+                'categories' => $this->getCategories(),
+                //'form' => $form->createView()
+            ]);
+    }
+
+    /**
+     * @Route("/category/{slug}", name="single_category")
+     */
+    public function category($slug, PaginatorInterface $paginator, Request $request)
+    {
+        $page = $request->query->getInt('page', 1);
+        $category = $this->getDoctrine()
+            ->getRepository(Category::class)->findOneBySlug($slug);
+
+        $posts = $paginator->paginate($category->getPosts(), $page, 5);
+
+        return $this->render('category.html.twig',
+            [
+                'category' => $category,
+                'posts'    => $posts,
+                'categories' => $this->getCategories()
+            ]);
+    }
+
+    private function getCategories()
+    {
+        $categories = $this->getDoctrine()->getRepository(Category::class)->findAll();
+        return $categories;
     }
 }

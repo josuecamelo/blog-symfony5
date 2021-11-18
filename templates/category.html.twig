@@ -19,12 +19,12 @@
 {% block body %}
     <div class="container">
         <div class="row">
+
             <div class="col-8">
                 <div class="row">
-                    <h1 class="">Postagens</h1>
+                    <h1>Categoria: {{ category.name }}</h1>
                     <hr>
                 </div>
-
                 <div class="row posts">
                     {% for post in posts %}
                         <div class="col-12 post">
@@ -34,7 +34,7 @@
 
                                 <small>
                                     Post criado em {{ post.createdAt|date("d/m/Y H:i:s") }}
-                                    por {{ post.author.firstName }} | Comentários: {# { post.commentsCollection.count() }#}
+                                    por {{ post.author.firstName }} | Comentários: {#{ post.commentsCollection.count() }#}
                                 </small>
 
                                 <p>
