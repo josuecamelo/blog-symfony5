@@ -48,6 +48,11 @@ class Post
      */
     private $updated_at;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="posts")
+     */
+    private $author;
+
     public function getId(): ?int
     {
         return $this->id;
