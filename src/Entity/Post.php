@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PostRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -126,6 +127,25 @@ class Post
     public function setUpdatedAt(\DateTime $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
+    }
+
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param ArrayCollection $author
+     */
+    public function setAuthor(User $author): self
+    {
+//        if($this->author->contains($author)){
+//            return $this;
+//        }
+
+        $this->author = $author;
 
         return $this;
     }
