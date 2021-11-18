@@ -40,3 +40,5 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         #- { path: ^/admin/posts, roles: ROLE_AUTHOR, methods: [POST, GET, PUT] }
         # - { path: ^/profile, roles: ROLE_USER }
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_AUTHOR
