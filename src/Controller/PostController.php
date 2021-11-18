@@ -3,15 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Form\PostType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/post', name: 'post_')]
+#[Route('/posts', name: 'post_')]
 class PostController extends AbstractController
 {
-    #[Route('/', name: 'index')]
+    #[Route('', name: 'index')]
     public function index(): Response
     {
         $posts = $this->getDoctrine()
@@ -24,12 +25,34 @@ class PostController extends AbstractController
     }
 
     #[Route('/create', name: 'create')]
-    public function create()
+    public function create(Request $request): Response
     {
-        return $this->render('post/create.html.twig');
+        $post = new Post();
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted()){
+            $post = $form->getData();
+            $post->setCreatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
+            $post->setUpdatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
+
+            $manager = $this->getDoctrine()->getManager();
+            $manager->persist($post);
+            $manager->flush();
+
+            $this->addFlash('success', 'Registro Inserido com Sucesso');
+
+            return $this->redirectToRoute('user_create');
+        }
+
+        //dump($this->getDoctrine()->getRepository(Post::class)->findAll());
+
+        return $this->render('post/create.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
-    #[Route('/save', name: 'save')]
+    /*#[Route('/save', name: 'save')]
     public function save(Request $request)
     {
         $data = $request->request->all();
@@ -48,9 +71,9 @@ class PostController extends AbstractController
 
         $this->addFlash('success', 'Registro inserido com Sucesso');
         return $this->redirectToRoute('post_index');
-    }
+    }*/
 
-    #[Route('/edit/{id}', name: 'edit')]
+    /*#[Route('/edit/{id}', name: 'edit')]
     public function edit($id)
     {
         $post = $this->getDoctrine()
@@ -60,9 +83,39 @@ class PostController extends AbstractController
         return $this->render('post/edit.html.twig',[
             'post' => $post
         ]);
+    }*/
+
+    #[Route('/edit/{id}', name: 'edit')]
+    public function edit(Request $request, $id): Response
+    {
+        $post = $this->getDoctrine()
+            ->getRepository(post::class)
+            ->find($id);
+
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted()){
+            $post = $form->getData();
+            $post->setUpdatedAt(new \DateTime('now', new \DateTimeZone('America/Sao_Paulo')));
+
+            $manager = $this->getDoctrine()->getManager();
+
+            $manager->flush();
+
+            $this->addFlash('success', 'Registro Alterado com Sucesso');
+
+            return $this->redirectToRoute('post_edit', ['id' => $id]);
+        }
+
+        //dump($this->getDoctrine()->getRepository(User::class)->findAll());
+
+        return $this->render('post/edit.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
-    #[Route('/update/{id}', name: 'update')]
+    /*#[Route('/update/{id}', name: 'update')]
     public function update(Request $request, $id)
     {
         $data = $request->request->all();
@@ -82,7 +135,7 @@ class PostController extends AbstractController
 
         $this->addFlash('success', 'Registro atualizado com Sucesso');
         return $this->redirectToRoute('post_index');
-    }
+    }*/
 
     #[Route('/delete/{id}', name: 'delete')]
     public function delete($id)

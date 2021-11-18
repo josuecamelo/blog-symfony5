@@ -1,30 +1,17 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Atualizar Usuário{% endblock %}
+
 {% block body %}
-    <form action="{{ path('post_update', {'id': post.id}) }}" method="post">
-        <p>
-            <label>Título</label>
-            <input type="text" name="title" value="{{ post.title }}" />
-        </p>
-        <p>
-            <label>Descrição</label>
-            <input type="text" name="description" value="{{ post.description }}"/>
-        </p>
-        <p>
-            <label>Slug</label>
-            <input type="text" name="slug" value="{{ post.slug }}"/>
-        </p>
-        <p>
-            <label>Conteúdo</label>
-            <textarea name="content" cols="30" rows="10">{{ post.content }}</textarea>
-        </p>
-        <p>
-            <button type="submit">Salvar</button>
-        </p>
-    </form>
-{% endblock %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
 
-{% block title %}
-    Edição de Postagem
+<div class="example-wrapper">
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <button class="btn btn-lg btn-success" type="submit">Salvar</button>
+    {{ form_end(form) }}
+</div>
 {% endblock %}
-
