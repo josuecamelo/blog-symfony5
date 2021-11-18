@@ -54,6 +54,16 @@ class Post
      */
     private $author;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="Category", inversedBy="postCollection")
+     */
+    private $categoryCollection;
+
+    public function __construct()
+    {
+        $this->categoryCollection = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -142,6 +152,28 @@ class Post
     public function setAuthor(User $author): self
     {
         $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCategoryCollection(): ArrayCollection
+    {
+        return $this->categoryCollection;
+    }
+
+    /**
+     * @param ArrayCollection $categoryCollection
+     */
+    public function setCategoryCollection(Category $categoryCollection): self
+    {
+        if($this->categoryCollection->contains($categoryCollection)){
+            return $this;
+        }
+
+        $this->categoryCollection[] = $categoryCollection;
 
         return $this;
     }

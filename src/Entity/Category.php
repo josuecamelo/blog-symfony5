@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -42,6 +43,16 @@ class Category
      * @ORM\Column(type="datetime")
      */
     private $updated_at;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Post", mappedBy="categoryCollection")
+     */
+    private $postCollection;
+
+    private function __construct()
+    {
+        $this->postCollection = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -106,5 +117,25 @@ class Category
         $this->updated_at = $updated_at;
 
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getPostCollection(): ArrayCollection
+    {
+        return $this->postCollection;
+    }
+
+    /**
+     * @param ArrayCollection $postCollection
+     */
+    public function setPostCollection(ArrayCollection $postCollection): void
+    {
+        $this->postCollection = $postCollection;
+    }
+
+    public function getPosts(){
+        return $this->postCollection;
     }
 }
