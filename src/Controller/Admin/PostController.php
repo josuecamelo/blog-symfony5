@@ -16,9 +16,18 @@ class PostController extends AbstractController
     #[Route('', name: 'index')]
     public function index(): Response
     {
-        $posts = $this->getDoctrine()
-            ->getRepository(Post::class)
-            ->findAll();
+        $authUser = $this->getUser();
+        $roles = $authUser->getRoles();
+
+        if(in_array('ROLE_AUTHOR',$roles)){
+            $posts = $authUser->getPosts();
+        }
+
+        if(in_array('ROLE_ADMIN',$roles)){
+            $posts = $this->getDoctrine()
+                ->getRepository(Post::class)
+                ->findAll();
+        }
 
         return $this->render('post/index.html.twig', [
             'posts' => $posts

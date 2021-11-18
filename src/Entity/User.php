@@ -142,10 +142,7 @@ class User implements UserInterface
         return $this;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getPosts(): ArrayCollection
+    public function getPosts()
     {
         return $this->posts;
     }
