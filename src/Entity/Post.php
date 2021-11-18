@@ -156,10 +156,7 @@ class Post
         return $this;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getCategoryCollection(): ArrayCollection
+    public function getCategoryCollection()
     {
         return $this->categoryCollection;
     }

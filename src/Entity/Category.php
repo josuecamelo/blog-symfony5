@@ -138,4 +138,9 @@ class Category
     public function getPosts(){
         return $this->postCollection;
     }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
 }
