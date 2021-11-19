@@ -50,14 +50,10 @@ class UserController extends AbstractController
 
             //Envio do email
             $data['subject'] = '[Blog SF4] - Usuário criado com sucesso';
-            $data['email']   = $user->getEmail();
+            $data['email'] = $user->getEmail();
+            $data['name'] = $user->getFirstName();
 
-            $view = $this->renderView('email/new_user.html.twig', [
-                'name' => $user->getFirstName(),
-                'email' => $user->getEmail()
-            ]);
-
-            $mailerService->sendMail($data, $view);
+            $mailerService->sendMail($data);
             //Final Envio da Mensagem
 
             $this->addFlash('success', 'Registro Inserido com Sucesso');
